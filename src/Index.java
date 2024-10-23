@@ -1,32 +1,29 @@
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Index {
-    private Map<String, IndexEntry> index = new HashMap<>();
+    private ConcurrentHashMap<String, IndexEntry> index = new ConcurrentHashMap<>();
 
-    public void addFile(String filePath, String content) {
-        if (filePath == null || content == null) {
-            throw new IllegalArgumentException("File path and content cannot be null");
-        }
-
+    public synchronized void addFile(String filePath, String content) {
         List<String> words = tokenize(content.toLowerCase());
         IndexEntry entry = new IndexEntry(filePath, words);
         index.put(filePath, entry);
     }
 
+    public synchronized void removeFile(String filePath) {
+        index.remove(filePath);
+    }
+
     public List<String> search(String word) {
         word = word.toLowerCase();
-        if (word == null) {
-            throw new NoSuchElementException("Word cannot be null or empty");
-        }
         List<String> matchingFiles = new ArrayList<>();
         
         for (IndexEntry entry : index.values()) {
             if (entry.containsWord(word)) {
-                matchingFiles.add(entry.getFilePath());
+                matchingFiles.add(new File(entry.getFilePath()).getAbsolutePath());
             }
         }
         return matchingFiles;
@@ -34,39 +31,53 @@ public class Index {
 
     public List<String> searchPhrase(String phrase) {
         phrase = phrase.toLowerCase();
-        if (phrase == null || phrase.isEmpty()) {
-            throw new NoSuchElementException("Phrase cannot be null or empty");
-        }
         List<String> matchingFiles = new ArrayList<>();
         List<String> phraseWords = tokenize(phrase); 
 
         for (IndexEntry entry : index.values()) {
             if (entry.containsPhrase(phraseWords)) {
-                matchingFiles.add(entry.getFilePath());
+                matchingFiles.add(new File(entry.getFilePath()).getAbsolutePath());
             }
         }
         return matchingFiles;
     }
 
-    public void display() {
+    public synchronized void display() {
+        if (index.isEmpty()) {
+            System.out.println("No files indexed yet.");
+        }
         for (IndexEntry entry : index.values()) {
-            System.out.println(entry.getFilePath());
+            System.out.println(new File(entry.getFilePath()).getAbsolutePath());
         }
     }
+
+    public synchronized List<String> searchByName(String fileName) {
+    List<String> matchingFiles = new ArrayList<>();
+    
+    for (IndexEntry entry : index.values()) {
+        if (entry.getFilePath().endsWith(fileName)) {
+            matchingFiles.add(new File(entry.getFilePath()).getAbsolutePath());
+        }
+    }
+    return matchingFiles;
+}
+
 
     private List<String> tokenize(String content) {
         List<String> words = new ArrayList<>();
-        String[] tokens = content.split("\\s+");
-
+        String[] tokens = content.split("[^\\w'']+");
+    
         for (String token : tokens) {
-            words.add(token);
+            if (!token.isEmpty()) {
+                words.add(token);
+            }
         }
         return words;
     }
-
+    
     private static class IndexEntry {
         private String filePath;
-        private List<String> words;
+        private List<String> words = new CopyOnWriteArrayList<>();
 
         public IndexEntry(String filePath, List<String> words) {
             this.filePath = filePath;
