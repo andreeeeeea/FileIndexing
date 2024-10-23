@@ -17,6 +17,10 @@ public class Index {
         index.remove(filePath);
     }
 
+    public synchronized boolean isFileIndexed(String filePath) {
+        return index.containsKey(filePath);
+    }
+
     public List<String> search(String word) {
         word = word.toLowerCase();
         List<String> matchingFiles = new ArrayList<>();
@@ -52,16 +56,15 @@ public class Index {
     }
 
     public synchronized List<String> searchByName(String fileName) {
-    List<String> matchingFiles = new ArrayList<>();
-    
-    for (IndexEntry entry : index.values()) {
-        if (entry.getFilePath().endsWith(fileName)) {
-            matchingFiles.add(new File(entry.getFilePath()).getAbsolutePath());
+        List<String> matchingFiles = new ArrayList<>();
+        
+        for (IndexEntry entry : index.values()) {
+            if (entry.getFilePath().endsWith(fileName)) {
+                matchingFiles.add(new File(entry.getFilePath()).getAbsolutePath());
+            }
         }
+        return matchingFiles;
     }
-    return matchingFiles;
-}
-
 
     private List<String> tokenize(String content) {
         List<String> words = new ArrayList<>();

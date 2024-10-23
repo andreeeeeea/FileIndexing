@@ -79,6 +79,11 @@ public class Console {
             return;
         }
 
+        if (index.isFileIndexed(filePath)) {
+            System.out.println("File '" + filePath + "' is already indexed.");
+            return;
+        }
+
         if (!filePath.endsWith(".txt")) {
             System.out.println("Invalid file type. Only .txt files are supported.");
             return;
@@ -124,39 +129,40 @@ public class Console {
     private void removeFile(Scanner scanner) {
         System.out.print("Enter the file path: ");
         String filePath = scanner.nextLine().replaceAll("^\"|\"$", "").trim();             
-
+    
         if(filePath == null || filePath.isEmpty()) {
             System.out.println("File path cannot be empty.");
             return;
         }
-
+    
         if (!filePath.endsWith(".txt")) {
             System.out.println("Invalid file type. Only .txt files are supported.");
             return;
         }
-
+    
         Future<?> future = executor.submit(() -> {
             long startTime = System.currentTimeMillis();
-
+            System.out.println("Trying to remove file: " + filePath);
+    
             try {
                 index.removeFile(filePath);
             } catch (Exception e) {
                 System.out.println("An error occurred while removing the file: " + e.getMessage());
                 return;
             }
-
+    
             long endTime = System.currentTimeMillis();
             String fileName = new File(filePath).getName();    
             System.out.println(fileName + " removed successfully. Time taken: " + (endTime - startTime) + "ms");
-
         });
-
+    
         try {
             future.get();
         } catch (Exception e) {
             System.out.println("An error occurred while removing the file: " + e.getMessage());
         }
     }
+    
     
     private void searchFiles(Scanner scanner) {
         System.out.print("Enter the word or phrase to search: ");
