@@ -60,11 +60,6 @@ After starting the application, you will see a menu with options:
 - To remove the File1.txt file from the Test 1 folder, choose option 2 and type the file path:
   
   `..\Test-1\File1.txt`
-  
-
-## Troubleshooting
-- UnsupportedClassVersionError: Ensure you are running the application with the same Java version that was used to compile it. Update your Java installation if necessary.
-- File Not Found: Make sure the file paths entered are correct and the files exist.
 
 
 
