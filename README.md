@@ -45,11 +45,11 @@ After starting the application, you will see a menu with options:
 
 - To index the File1.txt file in the Test 1 folder, choose option 1 and type the file path:
   
-  `Test-1\File1.txt`
+  `..\Test-1\File1.txt` to index File1.txt from the provided Test-1 folder
   
 - To search for a word/phrase, choose option 3 and type the wanted word/phrase:
   
-  `fair trade`
+  `village square`
   
 - To search for a certain file, choose option 4 and type the wanted file's name:
   
@@ -57,7 +57,7 @@ After starting the application, you will see a menu with options:
   
 - To remove the File1.txt file from the Test 1 folder, choose option 2 and type the file path:
   
-  `Test-1\File1.txt`
+  `..\Test-1\File1.txt`
   
 
 ## Troubleshooting
