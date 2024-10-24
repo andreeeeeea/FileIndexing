@@ -193,7 +193,7 @@ public class Console {
                 System.out.println("Matching files:" + "\n");
                 for (String filePath : matchingFiles) {
                     File file = new File(filePath);
-                    System.out.println("File: " + file.getName()); 
+                    System.out.println("File: " + file.getAbsolutePath()); 
                     System.out.println("Preview: ");
                     previewFileContent(file, input); 
                 }
