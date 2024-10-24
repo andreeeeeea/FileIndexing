@@ -46,6 +46,8 @@ After starting the application, you will see a menu with options:
 - To index the File1.txt file in the Test 1 folder, choose option 1 and type the file path:
   
   `..\Test-1\File1.txt` to index File1.txt from the provided Test-1 folder
+
+   `..\Test-2\File1.txt` to index File1.txt from the provided Test-2 folder, that is identical to the one from the Test-1 folder
   
 - To search for a word/phrase, choose option 3 and type the wanted word/phrase:
   
